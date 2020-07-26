@@ -13,8 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
@@ -370,9 +371,12 @@ public class UserDao {
     }
 
     public void checkRequestIp(String request_ip) {
-        ZoneId athensZone = ZoneId.of("Europe/Athens");
-        LocalDate date = LocalDate.now(athensZone);
-        String time = date.toString();
+
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Athens"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        String time = now.format(formatter);
+
         String request_ip_check = "insert ignore request_ips (ip, time_stamp) values (?,?)";
         try (Connection connection = DataBaseConnection.getInitConnection();
                 PreparedStatement requestIpCheck = connection.prepareStatement(request_ip_check);) {
