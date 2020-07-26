@@ -52,7 +52,7 @@
                 <div class="col col-lg-6">
                     <form autocomplete="on" class="login-form" action="${pageContext.request.contextPath}/loginFormHandling.htm" method="POST">
 
-                        <h2 class="text-center">FOR DEMONSTRATION</h2>
+                        <h2 class="text-center">FOR DEMONSRATION</h2>
 
 
                         <input  type ="hidden" id="username" name="username" value ="guest" />
