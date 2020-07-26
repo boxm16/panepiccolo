@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
@@ -336,8 +338,6 @@ public class UserDao {
 
         try (Connection connection = DataBaseConnection.getInitConnection();
                 PreparedStatement insertUser = connection.prepareStatement(inserUserSQL)) {
-     
-         
 
             insertUser.setString(1, user.getOfficial_name());
             insertUser.setString(2, user.getOfficial_name());
@@ -355,18 +355,35 @@ public class UserDao {
     }
 
     public void deleteUserByUserId(int user_id) {
-        
-         String deactivateUserSQL = "DELETE FROM user WHERE user_id=?";
+
+        String deactivateUserSQL = "DELETE FROM user WHERE user_id=?";
         try (Connection connection = DataBaseConnection.getInitConnection();
                 PreparedStatement deleteProduct = connection.prepareStatement(deactivateUserSQL);) {
-            
+
             deleteProduct.setInt(1, user_id);
-            
+
             deleteProduct.execute();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-  }
+    }
+
+    public void checkRequestIp(String request_ip) {
+        ZoneId athensZone = ZoneId.of("Europe/Athens");
+        LocalDate date = LocalDate.now(athensZone);
+        String time = date.toString();
+        String request_ip_check = "insert ignore request_ips (ip, time_stamp) values (?,?)";
+        try (Connection connection = DataBaseConnection.getInitConnection();
+                PreparedStatement requestIpCheck = connection.prepareStatement(request_ip_check);) {
+
+            requestIpCheck.setString(1, request_ip);
+            requestIpCheck.setString(2, time);
+            requestIpCheck.execute();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 }
