@@ -54,7 +54,6 @@
 
                         <h2 class="text-center">FOR DEMONSTRATION</h2>
 
-
                         <input  type ="hidden" id="username" name="username" value ="guest" />
 
                         <input type="hidden" id="password" name="password" value="guest"/> 
