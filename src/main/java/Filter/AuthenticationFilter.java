@@ -5,6 +5,7 @@
  */
 package Filter;
 
+import DBTools.UserDao;
 import java.io.IOException;
 import java.util.Date;
 import javax.servlet.Filter;
@@ -46,6 +47,11 @@ public class AuthenticationFilter implements Filter {
         System.out.println(new Date() + "URI:" + request.getRequestURI());
 
         if (loggedIn || loginRequest || logingRequest) {
+            if (loginRequest) {
+                String request_ip = getRequestIp(request);
+                UserDao userDao = new UserDao();
+                userDao.checkRequestIp(request_ip);
+            }
             chain.doFilter(request, response);
         } else {
             response.sendRedirect(loginURI);
@@ -55,6 +61,19 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void destroy() {
+    }
+
+    private String getRequestIp(HttpServletRequest request) {
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
     }
 
 }
